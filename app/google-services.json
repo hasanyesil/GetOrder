@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "795538692859",
+    "firebase_url": "https://coffe-management.firebaseio.com",
+    "project_id": "coffe-management",
+    "storage_bucket": "coffe-management.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:795538692859:android:c75e5e01fb2296d492ee5e",
+        "android_client_info": {
+          "package_name": "com.greenrock.getorder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "795538692859-944jlfkddq4k7derced94tlmbeddnmfj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdqrOtdL6nwowUJP8kVEbxIb2T2poL92o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "795538692859-944jlfkddq4k7derced94tlmbeddnmfj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
