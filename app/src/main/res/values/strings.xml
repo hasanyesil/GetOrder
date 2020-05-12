@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Get Order</string>
+    <string name="kullanici_adi">KULLANICI ADI</string>
+    <string name="sifre">PAROLA</string>
+    <string name="beni_hatirla">Beni hatırla</string>
+    <string name="kullanici_adi_hint">Kullanici adi..</string>
+    <string name="sifre_hint">Sifre...</string>
+    <string name="login_button">Giris</string>
 </resources>
