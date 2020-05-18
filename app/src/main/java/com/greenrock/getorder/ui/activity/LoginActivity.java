@@ -139,6 +139,7 @@ public class LoginActivity extends AppCompatActivity {
         mDatabase.removeEventListener(valueEventListener);
         mAuth.removeAuthStateListener(authStateListener);
         startActivity(loginIntent);
+        finish();
     }
 
 }
