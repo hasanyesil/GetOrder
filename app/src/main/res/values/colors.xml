@@ -6,4 +6,5 @@
     <color name="kullaniciadi_sifre">#FEAD92</color>
     <color name="empty_table">#707070</color>
     <color name="filled_table">#09A758</color>
+    <color name="title_color">#FFFFFF</color>
 </resources>

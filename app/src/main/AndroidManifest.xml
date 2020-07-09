@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.CheckActivity"></activity>
+        <activity android:name=".ui.activity.OrderActivity"></activity>
+        <activity android:name=".ui.activity.CheckActivity" />
         <activity android:name=".ui.activity.AdminActivity" />
         <activity android:name=".ui.activity.WaiterActivity" />
         <activity android:name=".ui.activity.LoginActivity">

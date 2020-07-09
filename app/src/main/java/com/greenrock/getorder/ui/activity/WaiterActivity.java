@@ -7,16 +7,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,35 +22,31 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.greenrock.getorder.R;
 import com.greenrock.getorder.ui.adapter.TableAdapter;
-import com.greenrock.getorder.util.interfaces.OnGetDataListener;
-import com.greenrock.getorder.util.interfaces.OnGetTableDataListener;
-import com.greenrock.getorder.util.interfaces.OnRecylerItemUpdateListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
-public class WaiterActivity extends AppCompatActivity implements OnGetTableDataListener, OnRecylerItemUpdateListener {
+public class WaiterActivity extends AppCompatActivity {
 
     private String TAG = "FirebaseTest";
     private int mTableCount;
     private int tableStatus[];
 
-    private OnGetDataListener getDataListener;
-    private OnGetTableDataListener getTableDataListener;
-    private OnRecylerItemUpdateListener onRecylerItemUpdateListener;
-
     private FirebaseApp mApp;
     private DatabaseReference mDatabase;
     private DatabaseReference mActiveCheckReferance;
+    private DatabaseReference mProductListReference;
+
     private FirebaseAuth mAuth;
 
+    private ArrayList<String> mProductList;
+
     private Toolbar mToolbar;
-    private RecyclerView mTableRecylerview;
+    private RecyclerView mTableRecyclerview;
     private TableAdapter adapter;
 
     @Override
     protected void onStart() {
-        getTableDataListener = (OnGetTableDataListener) this;
-        onRecylerItemUpdateListener = (OnRecylerItemUpdateListener) this;
         super.onStart();
     }
 
@@ -92,6 +83,7 @@ public class WaiterActivity extends AppCompatActivity implements OnGetTableDataL
         mAuth = FirebaseAuth.getInstance(mApp);
         mDatabase = FirebaseDatabase.getInstance().getReference("masa sayisi");
         mActiveCheckReferance = FirebaseDatabase.getInstance().getReference("aktif fisler");
+        mProductListReference = FirebaseDatabase.getInstance().getReference("urunler");
 
         ValueEventListener eventListener1 = new ValueEventListener() {
             @Override
@@ -118,7 +110,7 @@ public class WaiterActivity extends AppCompatActivity implements OnGetTableDataL
                     tableStatus[table-1] = 1;
                 }
 
-                onGetTableDataSuccess();
+                adapter.setTableStates(tableStatus);
                 Log.d(TAG, "onDataChange: " + Arrays.toString(tableStatus));
             }
 
@@ -128,31 +120,41 @@ public class WaiterActivity extends AppCompatActivity implements OnGetTableDataL
             }
         };
 
+        ValueEventListener productListListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()){
+                    for (DataSnapshot child2 : child.getChildren()){
+                        mProductList.add(child2.getKey());
+                    }
+                }
+                adapter.setProductList(mProductList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+
         mDatabase.addListenerForSingleValueEvent(eventListener1);
         mActiveCheckReferance.addValueEventListener(eventListener2);
+        mProductListReference.addListenerForSingleValueEvent(productListListener);
     }
 
     public void initComponents(){
+        mProductList = new ArrayList<>();
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        mTableRecylerview = (RecyclerView) findViewById(R.id.tableRecylerView);
+        mTableRecyclerview = (RecyclerView) findViewById(R.id.tableRecylerView);
         Log.d(TAG, "initComponents: " + mTableCount);
-        adapter = new TableAdapter(this,this);
-        mTableRecylerview.setAdapter(adapter);
-        mTableRecylerview.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new TableAdapter(this);
+        mTableRecyclerview.setAdapter(adapter);
+        mTableRecyclerview.setLayoutManager(new LinearLayoutManager(this));
         Log.d(TAG, "initComponents: " + mTableCount);
     }
 
-
-    @Override
-    public void onGetTableDataSuccess() {
-        // After getting active checks. Todo : Change tables color as green or grey.
-        adapter.setTableStates(tableStatus);
-    }
-
-    @Override
-    public void onRecylerViewItemUpdate(int updatedLineCount, int updatedLineOrder) {
-
-    }
 }

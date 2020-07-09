@@ -95,7 +95,6 @@ public class LoginActivity extends AppCompatActivity {
                     // If user logged in
                     Log.d(TAG, "onAuthStateChanged: hiii");
                     mDatabase.addValueEventListener(valueEventListener);
-
                 }
             }
         };

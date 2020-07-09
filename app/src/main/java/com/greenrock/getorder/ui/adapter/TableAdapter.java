@@ -1,12 +1,11 @@
 package com.greenrock.getorder.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.greenrock.getorder.R;
-import com.greenrock.getorder.util.interfaces.OnRecylerItemUpdateListener;
+import com.greenrock.getorder.ui.activity.OrderActivity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> {
@@ -28,7 +26,6 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     private String TAG = "TableAdapterTest";
     private Context context;
 
-    private OnRecylerItemUpdateListener itemUpdateListener;
 
     private int lineCount;
     private int lastLineTableCount;
@@ -38,9 +35,9 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     private ArrayList<Bitmap> filledTableBg;
     private ArrayList<Canvas> emptyTableCanvas;
     private ArrayList<Canvas> filledTableCanvas;
+    private ArrayList<String> productList;
 
-    public TableAdapter(OnRecylerItemUpdateListener updateListener, Context context){
-        itemUpdateListener = updateListener;
+    public TableAdapter(Context context){
         this.context = context;
 
         emptyTableBg = new ArrayList<Bitmap>();
@@ -66,14 +63,13 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
         if (lastLineTableCount != 0)
             lineCount = (tableStates.length / 3) + 1;
         else
-            lineCount = tableStates.length;
+            lineCount = tableStates.length / 3;
         this.notifyDataSetChanged();
-        updateHolders(activeTables);
     }
 
     @Override
     public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
-        holder.setIsRecyclable(false);
+        //holder.setIsRecyclable(false);
         super.onViewAttachedToWindow(holder);
     }
 
@@ -87,13 +83,54 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: line count -> " + lineCount + " position -> " + position + " last line table count -> " + lastLineTableCount);
+
+        holder.showViews();
+
         if (position+1 == lineCount){
             holder.hideLastViews(lastLineTableCount);
         }
 
         //Setting number of tables
+        setTablesBackground(holder,position);
+
+        //Setting active tables color.
+        setActiveTablesBackground(holder,position);
+
+        //Listeners
+
+        View.OnClickListener tableClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, OrderActivity.class);
+                intent.putExtra("product_list",productList);
+                switch (v.getId()){
+                    case R.id.lineFirstTable:
+                        intent.putExtra("table_name","masa " + (position * 3 + 1));
+                        break;
+                    case R.id.lineSecondTable:
+                        intent.putExtra("table_name","masa " + (position* 3 + 2));
+                        break;
+                    case R.id.lineThirdTable:
+                        intent.putExtra("table_name","masa " + (position* 3 + 3));
+                        break;
+                }
+                context.startActivity(intent);
+            }
+        };
+
+        holder.resetListeners();
+        holder.addListeners(tableClickListener);
+    }
+
+    @Override
+    public int getItemCount() {
+        return lineCount;
+    }
+
+    public void setTablesBackground(ViewHolder holder, int position){
+
         for (int i = 0; i < 3; i++) {
             emptyTableBg.add(i,BitmapFactory.decodeResource(context.getResources(),R.drawable.empty_table_grey).copy(Bitmap.Config.ARGB_8888, true));
             filledTableBg.add(i,BitmapFactory.decodeResource(context.getResources(),R.drawable.filled_table_green).copy(Bitmap.Config.ARGB_8888,true));
@@ -103,11 +140,12 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
             filledTableCanvas.get(i).drawText(String.valueOf(position * 3 + (i+1)),emptyTableBg.get(i).getWidth() / 2f, emptyTableBg.get(i).getHeight() / 2f,paint);
         }
 
-
         holder.lineFirstImageView.setImageBitmap(emptyTableBg.get(0));
         holder.lineSecondImageView.setImageBitmap(emptyTableBg.get(1));
         holder.lineThirdImageView.setImageBitmap(emptyTableBg.get(2));
-        //Setting active tables color.
+    }
+
+    public void setActiveTablesBackground(ViewHolder holder, int position){
         for (int i : activeTables){
             if ((i-1) / 3 == position){
                 int order = i % 3;
@@ -126,10 +164,10 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return lineCount;
+    public void setProductList(ArrayList<String> arrayList){
+        productList = arrayList;
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -155,20 +193,26 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
                     lineThirdImageView.setVisibility(View.GONE);
                     break;
             }
-
         }
 
+        public void showViews(){
+            lineFirstImageView.setVisibility(View.VISIBLE);
+            lineSecondImageView.setVisibility(View.VISIBLE);
+            lineThirdImageView.setVisibility(View.VISIBLE);
+        }
+
+        public void resetListeners(){
+            lineFirstImageView.setOnClickListener(null);
+            lineSecondImageView.setOnClickListener(null);
+            lineThirdImageView.setOnClickListener(null);
+        }
+
+        public void addListeners(View.OnClickListener onClickListener){
+            lineFirstImageView.setOnClickListener(onClickListener);
+            lineSecondImageView.setOnClickListener(onClickListener);
+            lineThirdImageView.setOnClickListener(onClickListener);
+        }
     }
 
-    public void updateHolders(List<Integer> activeTables){
-        int updatedLineCount;
-        int updatedTableOrder;
-        for (int i : activeTables){
-            updatedLineCount = i / 3;
-            updatedTableOrder = i % 3;
-            itemUpdateListener.onRecylerViewItemUpdate(updatedLineCount,updatedTableOrder);
-        }
-        int i = 0;
-    }
 
 }
