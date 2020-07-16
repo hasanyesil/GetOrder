@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.greenrock.getorder.R;
+import com.greenrock.getorder.interfaces.ProductCountListener;
 
 import java.util.HashMap;
 
@@ -19,8 +20,10 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
 
     //Name, count
     private HashMap<String,String> orderListMap;
+    private ProductCountListener mProductCounterListener;
 
-    public OrderListAdapter(){
+    public OrderListAdapter(ProductCountListener productCountListener){
+        mProductCounterListener = productCountListener;
         orderListMap = new HashMap<>();
     }
 
@@ -48,8 +51,14 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
         holder.decreaseImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                orderListMap.put(key,String.valueOf(count-1));
-                notifyItemChanged(position);
+                if (count == 1){
+                    orderListMap.remove(key);
+                    mProductCounterListener.onCountChange(key,count-1);
+                }else{
+                    orderListMap.put(key,String.valueOf(count-1));
+                    mProductCounterListener.onCountChange(key,count-1);
+                }
+                notifyItemRemoved(position);
             }
         });
 
@@ -58,6 +67,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
             public void onClick(View view) {
                 orderListMap.put(key,String.valueOf(count+1));
                 notifyItemChanged(position);
+                mProductCounterListener.onCountChange(key,count+1);
             }
         });
     }

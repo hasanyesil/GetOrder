@@ -54,7 +54,7 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
         setContentView(R.layout.activity_order);
 
         mCheckOrderList = new HashMap<>();
-        mOrderListAdapter = new OrderListAdapter();
+        mOrderListAdapter = new OrderListAdapter(this);
 
         mTableName = getIntent().getStringExtra("table_name");
         mProductList = (HashMap<String, Float>) getIntent().getSerializableExtra("product_list");
@@ -140,12 +140,11 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
     }
 
     @Override
-    public void onDecreaseListener(String key, int count) {
-
-    }
-
-    @Override
-    public void onIncreaseListener(String key, int count) {
-
+    public void onCountChange(String key, int count) {
+        if (count == 0){
+            mCheckData.child(key).removeValue();
+        }else{
+            mCheckData.child(key).child("adet").setValue(count);
+        }
     }
 }
