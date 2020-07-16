@@ -1,8 +1,10 @@
 package com.greenrock.getorder.ui.adapter;
 
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,8 +38,28 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
 
     @Override
     public void onBindViewHolder(@NonNull OrderListAdapter.CustomHolder holder, int position) {
-        holder.productNameTv.setText(orderListMap.keySet().toArray()[position].toString());
-        holder.productCountTv.setText(String.format("X%s", orderListMap.values().toArray()[position].toString()));
+        String key = orderListMap.keySet().toArray()[position].toString();
+        int count = Integer.parseInt(orderListMap.values().toArray()[position].toString());
+        holder.productNameTv.setText(key);
+        holder.productCountTv.setText(String.format("X%s", count));
+
+        holder.removeClickListeners();
+
+        holder.decreaseImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                orderListMap.put(key,String.valueOf(count-1));
+                notifyItemChanged(position);
+            }
+        });
+
+        holder.increaseImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                orderListMap.put(key,String.valueOf(count+1));
+                notifyItemChanged(position);
+            }
+        });
     }
 
     @Override
@@ -49,12 +71,21 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
 
         public TextView productNameTv;
         public TextView productCountTv;
+        public ImageView decreaseImageView;
+        public ImageView increaseImageView;
 
         public CustomHolder(@NonNull View itemView) {
             super(itemView);
 
             productNameTv = (TextView) itemView.findViewById(R.id.productTextView);
             productCountTv = (TextView) itemView.findViewById(R.id.productCountTextView);
+            decreaseImageView = (ImageView) itemView.findViewById(R.id.decreaseImageView);
+            increaseImageView = (ImageView) itemView.findViewById(R.id.increaseImageView);
+        }
+
+        public void removeClickListeners(){
+            decreaseImageView.setOnClickListener(null);
+            increaseImageView.setOnClickListener(null);
         }
     }
 }
