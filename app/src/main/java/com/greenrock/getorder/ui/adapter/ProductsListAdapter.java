@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -58,19 +59,36 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             holder.productCountTextview.setText(selectedProducts.get(productName).toString());
         }else
             holder.productCountTextview.setText("0");
+        if (selectedProducts.get(productName) == 0){
+            holder.removeProductImageView.setVisibility(View.INVISIBLE);
+        }
 
-        holder.itemView.setOnClickListener(null);
+        holder.removeListeners();
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
+        View.OnClickListener addProductListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int count = selectedProducts.get(productName);
                 selectedProducts.put(productName,count+1);
                 holder.productCountTextview.setText(String.valueOf(count+1));
+                holder.removeProductImageView.setVisibility(View.VISIBLE);
             }
         };
 
-        holder.itemView.setOnClickListener(onClickListener);
+        View.OnClickListener removeProductListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int count = selectedProducts.get(productName);
+                if (count == 1){
+                    holder.removeProductImageView.setVisibility(View.INVISIBLE);
+                }
+                selectedProducts.put(productName,count-1);
+                holder.productCountTextview.setText(String.valueOf(count-1));
+            }
+        };
+
+        holder.addProductImageView.setOnClickListener(addProductListener);
+        holder.removeProductImageView.setOnClickListener(removeProductListener);
     }
 
     @Override
@@ -112,11 +130,20 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
         public TextView productNameTextview;
         public TextView productCountTextview;
+        public ImageView removeProductImageView;
+        public ImageView addProductImageView;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
             productNameTextview = (TextView) itemView.findViewById(R.id.productNameTextview);
             productCountTextview = (TextView) itemView.findViewById(R.id.countTextview);
+            removeProductImageView = (ImageView) itemView.findViewById(R.id.removeProductImageView);
+            addProductImageView = (ImageView) itemView.findViewById(R.id.addProductImageView);
+        }
+
+        public void removeListeners(){
+            removeProductImageView.setOnClickListener(null);
+            addProductImageView.setOnClickListener(null);
         }
 
     }
