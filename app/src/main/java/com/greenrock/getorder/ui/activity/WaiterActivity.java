@@ -25,6 +25,7 @@ import com.greenrock.getorder.ui.adapter.TableAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class WaiterActivity extends AppCompatActivity {
 
@@ -39,7 +40,7 @@ public class WaiterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    private ArrayList<String> mProductList;
+    private HashMap<String,Float> mProductList;
 
     private Toolbar mToolbar;
     private RecyclerView mTableRecyclerview;
@@ -125,7 +126,7 @@ public class WaiterActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()){
                     for (DataSnapshot child2 : child.getChildren()){
-                        mProductList.add(child2.getKey());
+                        mProductList.put(child2.getKey(),Float.parseFloat(child2.getValue().toString()));
                     }
                 }
                 adapter.setProductList(mProductList);
@@ -144,7 +145,7 @@ public class WaiterActivity extends AppCompatActivity {
     }
 
     public void initComponents(){
-        mProductList = new ArrayList<>();
+        mProductList = new HashMap<>();
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
