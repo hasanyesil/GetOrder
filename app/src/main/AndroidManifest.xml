@@ -9,7 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.OrderActivity"></activity>
+        <activity android:name=".ui.activity.SearchActivity">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.activity.OrderActivity" />
         <activity android:name=".ui.activity.CheckActivity" />
         <activity android:name=".ui.activity.AdminActivity" />
         <activity android:name=".ui.activity.WaiterActivity" />

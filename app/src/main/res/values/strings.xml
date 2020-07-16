@@ -6,4 +6,6 @@
     <string name="kullanici_adi_hint">Kullanici adi..</string>
     <string name="sifre_hint">Sifre...</string>
     <string name="login_button">Giris</string>
+    <string name="action_search">search</string>
+    <string name="toolbar_title">Ürünler</string>
 </resources>

@@ -20,8 +20,9 @@
         android:id="@+id/productCountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
+        android:text="X5"
         android:textAllCaps="true"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
@@ -50,4 +51,27 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.7" />
+
+    <ImageView
+        android:id="@+id/increaseImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/ic_add_circle_outline_black"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/productCountTextView"
+        app:layout_constraintStart_toEndOf="@+id/productCountTextView"
+        app:layout_constraintTop_toTopOf="@+id/productCountTextView" />
+
+    <ImageView
+        android:id="@+id/decreaseImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/ic_remove_circle_outline_black"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/productCountTextView"
+        app:layout_constraintEnd_toStartOf="@+id/productCountTextView"
+        app:layout_constraintTop_toTopOf="@+id/productCountTextView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
