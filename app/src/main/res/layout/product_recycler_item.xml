@@ -10,9 +10,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="24dp"
         android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/countTextview"
+        app:layout_constraintEnd_toStartOf="@+id/removeProductImageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,12 +21,10 @@
         android:id="@+id/countTextview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/productNameTextview"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:text="x3"
+        app:layout_constraintEnd_toStartOf="@+id/addProductImageView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -37,4 +36,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/productNameTextview" />
+
+    <ImageView
+        android:id="@+id/addProductImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintBottom_toBottomOf="@+id/countTextview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/countTextview"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/ic_add_circle_outline_black" />
+
+    <ImageView
+        android:id="@+id/removeProductImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/countTextview"
+        app:layout_constraintEnd_toStartOf="@+id/countTextview"
+        app:layout_constraintTop_toTopOf="@+id/countTextview"
+        app:srcCompat="@drawable/ic_remove_circle_outline_black" />
 </androidx.constraintlayout.widget.ConstraintLayout>
