@@ -19,6 +19,7 @@ import com.greenrock.getorder.R;
 import com.greenrock.getorder.ui.activity.OrderActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> {
@@ -35,7 +36,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     private ArrayList<Bitmap> filledTableBg;
     private ArrayList<Canvas> emptyTableCanvas;
     private ArrayList<Canvas> filledTableCanvas;
-    private ArrayList<String> productList;
+    private HashMap<String,Float> productList;
 
     public TableAdapter(Context context){
         this.context = context;
@@ -164,8 +165,8 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
         }
     }
 
-    public void setProductList(ArrayList<String> arrayList){
-        productList = arrayList;
+    public void setProductList(HashMap<String,Float> productList){
+        this.productList = productList;
     }
 
 
