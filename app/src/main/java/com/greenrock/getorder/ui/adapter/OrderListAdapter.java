@@ -54,11 +54,11 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
                 if (count == 1){
                     orderListMap.remove(key);
                     mProductCounterListener.onCountChange(key,count-1);
+                    notifyItemRemoved(position);
                 }else{
                     orderListMap.put(key,String.valueOf(count-1));
                     mProductCounterListener.onCountChange(key,count-1);
                 }
-                notifyItemRemoved(position);
             }
         });
 
@@ -66,7 +66,6 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
             @Override
             public void onClick(View view) {
                 orderListMap.put(key,String.valueOf(count+1));
-                notifyItemChanged(position);
                 mProductCounterListener.onCountChange(key,count+1);
             }
         });
