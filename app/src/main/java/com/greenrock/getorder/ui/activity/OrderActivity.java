@@ -10,13 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.EditText;
-import android.widget.SearchView;
+import android.widget.Button;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +24,6 @@ import com.greenrock.getorder.ui.adapter.OrderListAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class OrderActivity extends AppCompatActivity implements ProductCountListener {
@@ -41,7 +36,7 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
     ValueEventListener orderCheckEventListener;
 
     private Toolbar mToolbar;
-    private EditText mSearcEditText;
+    private Button mAddProductButton;
     private RecyclerView mOrderRecyclerView;
     private OrderListAdapter mOrderListAdapter;
 
@@ -90,17 +85,14 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
     public void initComponents(){
         mToolbar = (Toolbar) findViewById(R.id.order_toolbar);
         mToolbar.setTitle(mTableName.toUpperCase());
-        mSearcEditText = (EditText) findViewById(R.id.product_search);
-        mSearcEditText.setOnTouchListener(new View.OnTouchListener() {
+        mAddProductButton = (Button) findViewById(R.id.addProductButton);
+        mAddProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP){
-                    ArrayList<String> productNames = new ArrayList<>(mProductList.keySet());
-                    Intent intent = new Intent(OrderActivity.this,SearchActivity.class);
-                    intent.putExtra("products",productNames);
-                    startActivityForResult(intent,1);
-                }
-                return false;
+            public void onClick(View view) {
+                ArrayList<String> productNames = new ArrayList<>(mProductList.keySet());
+                Intent intent = new Intent(OrderActivity.this,SearchActivity.class);
+                intent.putExtra("products",productNames);
+                startActivityForResult(intent,1);
             }
         });
         mOrderRecyclerView = (RecyclerView) findViewById(R.id.orderRecyclerView);
