@@ -30,7 +30,7 @@ public class SearchActivity extends AppCompatActivity{
     private androidx.appcompat.widget.Toolbar toolbar;
     private RecyclerView recyclerView;
     private SearchView searchView;
-    private List<String> products;
+    private HashMap<String,Float> products;
     private ProductsListAdapter mAdapter;
 
     @Override
@@ -38,7 +38,7 @@ public class SearchActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        products = getIntent().getStringArrayListExtra("products");
+        products = (HashMap<String, Float>) getIntent().getSerializableExtra("products");
         initializeViews();
 
     }

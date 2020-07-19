@@ -17,8 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.greenrock.getorder.R;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,16 +24,16 @@ import java.util.List;
 public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapter.Holder> implements Filterable {
 
     private Context context;
-    private List<String> productList;
+    private HashMap<String,Float> productList;  //Name, Price
     private List<String> productListFiltered;
     private HashMap<String,Integer> selectedProducts;
 
-    public ProductsListAdapter(Context context, List<String> productList){
+    public ProductsListAdapter(Context context, HashMap<String, Float> productList){
         this.context = context;
         this.productList = productList;
-        productListFiltered = new ArrayList<>(productList);
+        productListFiltered = new ArrayList<>(productList.keySet());
         selectedProducts = new HashMap<>();
-        for (String s : productList){
+        for (String s : productList.keySet()){
             selectedProducts.put(s,0);
         }
     }
@@ -54,7 +52,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     @Override
     public void onBindViewHolder(@NonNull final Holder holder, int position) {
         final String productName = productListFiltered.get(position);
-        holder.productNameTextview.setText(productName);
+        holder.productNameTextview.setText(productName.toUpperCase());
+        holder.priceTextView.setText(String.format("%s TL", productList.get(productList.keySet().toArray()[position])));
         if (selectedProducts.containsKey(productName)){
             holder.productCountTextview.setText(selectedProducts.get(productName).toString());
         }else
@@ -104,10 +103,10 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             protected FilterResults performFiltering(CharSequence constraint) {
                 List<String> filteredList = new ArrayList<>();
                 if (constraint == null || constraint.length() == 0) {
-                    filteredList.addAll(productList);
+                    filteredList.addAll(productList.keySet());
                 } else {
                     String filterPattern = constraint.toString().toLowerCase().trim();
-                    for (String product : productList) {
+                    for (String product : productList.keySet()) {
                         if (product.toLowerCase().contains(filterPattern)) {
                             filteredList.add(product);
                         }
@@ -130,6 +129,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
         public TextView productNameTextview;
         public TextView productCountTextview;
+        public TextView priceTextView;
         public ImageView removeProductImageView;
         public ImageView addProductImageView;
 
@@ -137,6 +137,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             super(itemView);
             productNameTextview = (TextView) itemView.findViewById(R.id.productNameTextview);
             productCountTextview = (TextView) itemView.findViewById(R.id.countTextview);
+            priceTextView = (TextView) itemView.findViewById(R.id.price_textview);
             removeProductImageView = (ImageView) itemView.findViewById(R.id.removeProductImageView);
             addProductImageView = (ImageView) itemView.findViewById(R.id.addProductImageView);
         }

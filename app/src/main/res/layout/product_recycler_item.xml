@@ -41,9 +41,9 @@
         android:id="@+id/addProductImageView"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/countTextview"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/price_textview"
         app:layout_constraintTop_toTopOf="@+id/countTextview"
         app:srcCompat="@drawable/ic_add_circle_outline_black" />
 
@@ -56,4 +56,14 @@
         app:layout_constraintEnd_toStartOf="@+id/countTextview"
         app:layout_constraintTop_toTopOf="@+id/countTextview"
         app:srcCompat="@drawable/ic_remove_circle_outline_black" />
+
+    <TextView
+        android:id="@+id/price_textview"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/addProductImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/addProductImageView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
