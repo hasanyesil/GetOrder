@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.greenrock.getorder.R;
+import com.greenrock.getorder.ui.activity.CheckActivity;
 import com.greenrock.getorder.ui.activity.OrderActivity;
 
 import java.util.ArrayList;
@@ -37,10 +38,11 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     private ArrayList<Canvas> emptyTableCanvas;
     private ArrayList<Canvas> filledTableCanvas;
     private HashMap<String,Float> productList;
+    private boolean isCashier;
 
-    public TableAdapter(Context context){
+    public TableAdapter(Context context, boolean isCashier){
         this.context = context;
-
+        this.isCashier = isCashier;
         emptyTableBg = new ArrayList<Bitmap>();
         emptyTableCanvas = new ArrayList<>();
 
@@ -104,8 +106,14 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
         View.OnClickListener tableClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, OrderActivity.class);
-                intent.putExtra("product_list",productList);
+                Intent intent;
+                if (isCashier){
+                    intent = new Intent(context, CheckActivity.class);
+                    intent.putExtra("product_list",productList);
+                }else {
+                    intent = new Intent(context, OrderActivity.class);
+                    intent.putExtra("product_list", productList);
+                }
                 switch (v.getId()){
                     case R.id.lineFirstTable:
                         intent.putExtra("table_name","masa " + (position * 3 + 1));

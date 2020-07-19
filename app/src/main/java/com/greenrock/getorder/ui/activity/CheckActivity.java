@@ -1,16 +1,177 @@
 package com.greenrock.getorder.ui.activity;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.greenrock.getorder.R;
+import com.greenrock.getorder.interfaces.ProductCountListener;
+import com.greenrock.getorder.ui.adapter.OrderListAdapter;
 
-public class CheckActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class CheckActivity extends AppCompatActivity implements ProductCountListener {
+
+    private String TAG = "OrderTest";
+    private String mTableName;
+
+    private DatabaseReference mCheckData;
+
+    ValueEventListener orderCheckEventListener;
+
+    private Toolbar mToolbar;
+    private RecyclerView mOrderRecyclerView;
+    private OrderListAdapter mOrderListAdapter;
+    private Button mCheckButton;
+
+    private HashMap<String, String> mCheckOrderList;   //
+    private HashMap<String,Float> mProductList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check);
+
+        mCheckOrderList = new HashMap<>();
+        mOrderListAdapter = new OrderListAdapter(this);
+
+        mTableName = getIntent().getStringExtra("table_name");
+        mProductList = (HashMap<String, Float>) getIntent().getSerializableExtra("product_list");
+        Log.d(TAG, "onCreate: table name: " + mTableName);
+        Log.d(TAG, "onCreate: product list: " + mProductList);
+        initFirebase();
+        initComponents();
+    }
+
+    public void initFirebase()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {
+        mCheckData = FirebaseDatabase.getInstance().getReference("aktif fisler/" + mTableName + "/urunler");
+
+        orderCheckEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()){
+                    mCheckOrderList.put(child.getKey(),child.child("adet").getValue().toString());
+                }
+                mOrderListAdapter.setProductList(mCheckOrderList);
+                Log.d(TAG, "onDataChange: sa");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: Something goes wrong, check your network connection");
+            }
+
+        };
+
+        mCheckData.addValueEventListener(orderCheckEventListener);
+    }
+
+    public void initComponents(){
+        mToolbar = (Toolbar) findViewById(R.id.check_order_toolbar);
+        mToolbar.setTitle(mTableName.toUpperCase());
+        mOrderRecyclerView = (RecyclerView) findViewById(R.id.check_orderRecyclerView);
+        mOrderRecyclerView.setAdapter(mOrderListAdapter);
+        mOrderRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mCheckButton = (Button) findViewById(R.id.check_button);
+
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog dialog;
+                AlertDialog.Builder builder = new AlertDialog.Builder(CheckActivity.this);
+
+                TextView title = new TextView(CheckActivity.this);
+                title.setTextColor(ContextCompat.getColor(CheckActivity.this, R.color.colorPrimary));
+                title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                title.setTypeface(Typeface.DEFAULT_BOLD);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(0, 20, 0, 0);
+                title.setPadding(0,30,0,0);
+                title.setLayoutParams(lp);
+                title.setText("HESAP");
+                title.setGravity(Gravity.CENTER);
+
+                builder.setCustomTitle(title).setMessage("Hesap kapatılsın mı?");
+                builder.setPositiveButton("Evet", new Dialog.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.setNegativeButton("İptal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                dialog = builder.create();
+                dialog.show();
+            }
+        };
+        mCheckButton.setOnClickListener(listener);
+    }
+
+
+    @Override
+    protected void onStop() {
+        mCheckData.removeEventListener(orderCheckEventListener);
+        super.onStop();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == RESULT_OK){
+            HashMap<String,Integer> selectedProducts = (HashMap<String,Integer>) data.getSerializableExtra("selectedProducts");
+            writeFirebase(selectedProducts);
+        }
+    }
+
+    public void writeFirebase(HashMap<String,Integer> productMap){
+        for (Map.Entry<String,Integer> entry : productMap.entrySet()){
+            if (mCheckOrderList.containsKey(entry.getKey())){
+                int count = Integer.parseInt(mCheckOrderList.get(entry.getKey()));
+                entry.setValue(entry.getValue() + count);
+                Log.d(TAG, "writeFirebase: Urun -> " + entry.getKey() + " Adet: " + entry.getValue());
+            }
+            mCheckData.child(entry.getKey()).child("adet").setValue(entry.getValue());
+            mCheckData.child(entry.getKey()).child("adet fiyat").setValue(mProductList.get(entry.getKey()));
+            mCheckData.removeEventListener(orderCheckEventListener);
+            mCheckData.addValueEventListener(orderCheckEventListener);
+        }
+    }
+
+    @Override
+    public void onCountChange(String key, int count) {
+        if (count == 0){
+            mCheckData.child(key).removeValue();
+        }else{
+            mCheckData.child(key).child("adet").setValue(count);
+        }
     }
 }

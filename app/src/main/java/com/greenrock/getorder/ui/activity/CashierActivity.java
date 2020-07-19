@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class WaiterActivity extends AppCompatActivity {
+public class CashierActivity extends AppCompatActivity {
 
     private String TAG = "FirebaseTest";
     private int mTableCount;
@@ -54,7 +54,7 @@ public class WaiterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_waiter);
+        setContentView(R.layout.activity_cashier);
 
         initFirebase();
         initComponents();
@@ -72,7 +72,7 @@ public class WaiterActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.logout_button:
                 mAuth.signOut();
-                Intent intent = new Intent(WaiterActivity.this,LoginActivity.class);
+                Intent intent = new Intent(CashierActivity.this,LoginActivity.class);
                 startActivity(intent);
                 finish();
         }
@@ -147,12 +147,12 @@ public class WaiterActivity extends AppCompatActivity {
     public void initComponents(){
         mProductList = new HashMap<>();
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.cashier_toolbar);
         setSupportActionBar(mToolbar);
 
-        mTableRecyclerview = (RecyclerView) findViewById(R.id.tableRecylerView);
+        mTableRecyclerview = (RecyclerView) findViewById(R.id.cashier_tableRecylerView);
         Log.d(TAG, "initComponents: " + mTableCount);
-        adapter = new TableAdapter(this,false);
+        adapter = new TableAdapter(this,true);
         mTableRecyclerview.setAdapter(adapter);
         mTableRecyclerview.setLayoutManager(new LinearLayoutManager(this));
         Log.d(TAG, "initComponents: " + mTableCount);

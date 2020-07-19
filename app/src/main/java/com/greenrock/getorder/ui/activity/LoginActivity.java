@@ -131,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
                 loginIntent = new Intent(LoginActivity.this,AdminActivity.class);
                 break;
             case "kasa":
-                loginIntent = new Intent(LoginActivity.this,CheckActivity.class);
+                loginIntent = new Intent(LoginActivity.this,CashierActivity.class);
                 break;
         }
 
