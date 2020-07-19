@@ -22,6 +22,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +33,10 @@ import com.greenrock.getorder.R;
 import com.greenrock.getorder.interfaces.ProductCountListener;
 import com.greenrock.getorder.ui.adapter.OrderListAdapter;
 
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +46,8 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
     private String mTableName;
 
     private DatabaseReference mCheckData;
+    private DatabaseReference mClosedCheckData;
+    private DatabaseReference mCheckNode;
 
     ValueEventListener orderCheckEventListener;
 
@@ -70,7 +77,8 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
 
     public void initFirebase()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {
         mCheckData = FirebaseDatabase.getInstance().getReference("aktif fisler/" + mTableName + "/urunler");
-
+        mCheckNode = FirebaseDatabase.getInstance().getReference("aktif fisler/" + mTableName);
+        mClosedCheckData = FirebaseDatabase.getInstance().getReference("inaktif fisler");
         orderCheckEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -119,7 +127,24 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
                 builder.setCustomTitle(title).setMessage("Hesap kapatılsın mı?");
                 builder.setPositiveButton("Evet", new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
+                        Date date = new Date();
+                        SimpleDateFormat dayFormatter = new SimpleDateFormat("dd-MM-yyyy");
+                        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+                        String day = dayFormatter.format(date);
+                        String time = timeFormatter.format(date);
+                        mClosedCheckData.child(day).child(time).child("masa").setValue(mTableName.split(" ")[1]);
+                        for (Map.Entry entry : mCheckOrderList.entrySet()){
+                            mClosedCheckData.child(day).child(time).child("urunler").child(entry.getKey().toString()).child("adet").setValue(Float.valueOf(entry.getValue().toString()))
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            mClosedCheckData.child(day).child(time).child("urunler").child(entry.getKey().toString()).child("adet fiyat")
+                                                    .setValue(mProductList.get(entry.getKey()));
+                                        }
+                                    });
+                            mCheckNode.removeValue();
+                            finish();
+                        }
                     }
                 });
                 builder.setNegativeButton("İptal", new DialogInterface.OnClickListener() {
