@@ -20,11 +20,13 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
 
     //Name, count
     private HashMap<String,String> orderListMap;
+    private HashMap<String,Float> orderPriceMap;
     private ProductCountListener mProductCounterListener;
 
-    public OrderListAdapter(ProductCountListener productCountListener){
+    public OrderListAdapter(ProductCountListener productCountListener, HashMap<String,Float> orderPriceMap){
         mProductCounterListener = productCountListener;
         orderListMap = new HashMap<>();
+        this.orderPriceMap = orderPriceMap;
     }
 
     public void setProductList(HashMap<String,String> orderList){
@@ -45,7 +47,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
         int count = Integer.parseInt(orderListMap.values().toArray()[position].toString());
         holder.productNameTv.setText(key);
         holder.productCountTv.setText(String.format("X%s", count));
-
+        //TODO: Show price from orderPriceMap
         holder.removeClickListeners();
 
         holder.decreaseImageView.setOnClickListener(new View.OnClickListener() {

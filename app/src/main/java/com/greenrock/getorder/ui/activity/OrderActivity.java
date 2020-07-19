@@ -40,8 +40,8 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
     private RecyclerView mOrderRecyclerView;
     private OrderListAdapter mOrderListAdapter;
 
-    private HashMap<String, String> mCheckOrderList;   //
-    private HashMap<String,Float> mProductList;
+    private HashMap<String, String> mCheckOrderList;   //Name, Count
+    private HashMap<String,Float> mProductList; //Name, Price
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
         setContentView(R.layout.activity_order);
 
         mCheckOrderList = new HashMap<>();
-        mOrderListAdapter = new OrderListAdapter(this);
+        mOrderListAdapter = new OrderListAdapter(this,mProductList);
 
         mTableName = getIntent().getStringExtra("table_name");
         mProductList = (HashMap<String, Float>) getIntent().getSerializableExtra("product_list");
@@ -89,9 +89,8 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
         mAddProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<String> productNames = new ArrayList<>(mProductList.keySet());
                 Intent intent = new Intent(OrderActivity.this,SearchActivity.class);
-                intent.putExtra("products",productNames);
+                intent.putExtra("products",mProductList);
                 startActivityForResult(intent,1);
             }
         });

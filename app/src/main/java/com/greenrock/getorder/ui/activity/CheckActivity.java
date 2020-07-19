@@ -65,7 +65,7 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
         setContentView(R.layout.activity_check);
 
         mCheckOrderList = new HashMap<>();
-        mOrderListAdapter = new OrderListAdapter(this);
+        mOrderListAdapter = new OrderListAdapter(this,mProductList);
 
         mTableName = getIntent().getStringExtra("table_name");
         mProductList = (HashMap<String, Float>) getIntent().getSerializableExtra("product_list");
