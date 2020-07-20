@@ -44,6 +44,7 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
 
     private String TAG = "OrderTest";
     private String mTableName;
+    private float totalPrice;
 
     private DatabaseReference mCheckData;
     private DatabaseReference mClosedCheckData;
@@ -55,6 +56,8 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
     private RecyclerView mOrderRecyclerView;
     private OrderListAdapter mOrderListAdapter;
     private Button mCheckButton;
+    private TextView mTotalPriceTextview;
+
 
     private HashMap<String, String> mCheckOrderList;   //
     private HashMap<String,Float> mProductList;
@@ -64,11 +67,12 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check);
 
+        mProductList = (HashMap<String, Float>) getIntent().getSerializableExtra("product_list");
+
         mCheckOrderList = new HashMap<>();
-        mOrderListAdapter = new OrderListAdapter(this,mProductList);
+        mOrderListAdapter = new OrderListAdapter(this,mProductList,true);
 
         mTableName = getIntent().getStringExtra("table_name");
-        mProductList = (HashMap<String, Float>) getIntent().getSerializableExtra("product_list");
         Log.d(TAG, "onCreate: table name: " + mTableName);
         Log.d(TAG, "onCreate: product list: " + mProductList);
         initFirebase();
@@ -86,7 +90,8 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
                     mCheckOrderList.put(child.getKey(),child.child("adet").getValue().toString());
                 }
                 mOrderListAdapter.setProductList(mCheckOrderList);
-                Log.d(TAG, "onDataChange: sa");
+
+                updateTotalPrice();
             }
 
             @Override
@@ -106,6 +111,7 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
         mOrderRecyclerView.setAdapter(mOrderListAdapter);
         mOrderRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mCheckButton = (Button) findViewById(R.id.check_button);
+        mTotalPriceTextview = (TextView) findViewById(R.id.total_price_textview);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -140,6 +146,7 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
                                         public void onComplete(@NonNull Task<Void> task) {
                                             mClosedCheckData.child(day).child(time).child("urunler").child(entry.getKey().toString()).child("adet fiyat")
                                                     .setValue(mProductList.get(entry.getKey()));
+                                            mClosedCheckData.child(day).child(time).child("toplam fiyat").setValue(totalPrice);
                                         }
                                     });
                             mCheckNode.removeValue();
@@ -197,6 +204,16 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
             mCheckData.child(key).removeValue();
         }else{
             mCheckData.child(key).child("adet").setValue(count);
+        }
+    }
+
+    public void updateTotalPrice(){
+        totalPrice = 0;
+        if (mTotalPriceTextview!=null){
+            for (Map.Entry entry : mCheckOrderList.entrySet()){
+                totalPrice = totalPrice + (Integer.parseInt(entry.getValue().toString()) * mProductList.get(entry.getKey()));
+            }
+            mTotalPriceTextview.setText(String.format("%s TL", totalPrice));
         }
     }
 }

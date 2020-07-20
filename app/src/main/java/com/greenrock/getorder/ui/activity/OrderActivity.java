@@ -49,10 +49,9 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
         setContentView(R.layout.activity_order);
 
         mCheckOrderList = new HashMap<>();
-        mOrderListAdapter = new OrderListAdapter(this,mProductList);
-
         mTableName = getIntent().getStringExtra("table_name");
         mProductList = (HashMap<String, Float>) getIntent().getSerializableExtra("product_list");
+        mOrderListAdapter = new OrderListAdapter(this,mProductList,false);
         Log.d(TAG, "onCreate: table name: " + mTableName);
         Log.d(TAG, "onCreate: product list: " + mProductList);
         initFirebase();

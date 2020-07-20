@@ -22,11 +22,13 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
     private HashMap<String,String> orderListMap;
     private HashMap<String,Float> orderPriceMap;
     private ProductCountListener mProductCounterListener;
+    private boolean isCashier;
 
-    public OrderListAdapter(ProductCountListener productCountListener, HashMap<String,Float> orderPriceMap){
+    public OrderListAdapter(ProductCountListener productCountListener, HashMap<String,Float> orderPriceMap, boolean isCashier){
         mProductCounterListener = productCountListener;
         orderListMap = new HashMap<>();
         this.orderPriceMap = orderPriceMap;
+        this.isCashier = isCashier;
     }
 
     public void setProductList(HashMap<String,String> orderList){
@@ -47,7 +49,10 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
         int count = Integer.parseInt(orderListMap.values().toArray()[position].toString());
         holder.productNameTv.setText(key);
         holder.productCountTv.setText(String.format("X%s", count));
-        //TODO: Show price from orderPriceMap
+        if (isCashier)
+            holder.productPriceTv.setText(String.format("%s TL", orderPriceMap.get(key)));
+        else
+            holder.productPriceTv.setVisibility(View.GONE);
         holder.removeClickListeners();
 
         holder.decreaseImageView.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +87,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
 
         public TextView productNameTv;
         public TextView productCountTv;
+        public TextView productPriceTv;
         public ImageView decreaseImageView;
         public ImageView increaseImageView;
 
@@ -90,6 +96,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
 
             productNameTv = (TextView) itemView.findViewById(R.id.productTextView);
             productCountTv = (TextView) itemView.findViewById(R.id.productCountTextView);
+            productPriceTv = (TextView) itemView.findViewById(R.id.order_price_textview);
             decreaseImageView = (ImageView) itemView.findViewById(R.id.decreaseImageView);
             increaseImageView = (ImageView) itemView.findViewById(R.id.increaseImageView);
         }

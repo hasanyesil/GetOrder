@@ -7,13 +7,15 @@
 
     <TextView
         android:id="@+id/productTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:fontFamily="@font/roboto_medium"
         android:textAllCaps="true"
         android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/decreaseImageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,11 +46,11 @@
         android:id="@+id/increaseImageView"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/ic_add_circle_outline_black"
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/productCountTextView"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/order_price_textview"
         app:layout_constraintTop_toTopOf="@+id/productCountTextView" />
 
     <ImageView
@@ -61,5 +63,15 @@
         app:layout_constraintBottom_toBottomOf="@+id/productCountTextView"
         app:layout_constraintEnd_toStartOf="@+id/productCountTextView"
         app:layout_constraintTop_toTopOf="@+id/productCountTextView" />
+
+    <TextView
+        android:id="@+id/order_price_textview"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/increaseImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/increaseImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
