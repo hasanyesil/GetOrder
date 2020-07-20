@@ -133,6 +133,8 @@ public class LoginActivity extends AppCompatActivity {
             case "kasa":
                 loginIntent = new Intent(LoginActivity.this,CashierActivity.class);
                 break;
+            default:
+                return;
         }
 
         mDatabase.removeEventListener(valueEventListener);

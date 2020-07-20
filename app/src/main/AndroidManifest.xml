@@ -9,7 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.CheckActivity"></activity>
+        <activity android:name=".ui.activity.OldChecksAcitivity"></activity>
+        <activity android:name=".ui.activity.ProductsActivity" />
+        <activity android:name=".ui.activity.WorkersActivity" />
+        <activity android:name=".ui.activity.CheckActivity" />
         <activity android:name=".ui.activity.CashierActivity" />
         <activity android:name=".ui.activity.SearchActivity">
             <meta-data
