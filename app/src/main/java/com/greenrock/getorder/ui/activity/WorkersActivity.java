@@ -3,12 +3,16 @@ package com.greenrock.getorder.ui.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +38,7 @@ public class WorkersActivity extends AppCompatActivity {
 
     RecyclerView mWorkerRecyclerView;
     WorkerAdapter mWorkerAdapter;
+    Toolbar mWorkerListToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +51,24 @@ public class WorkersActivity extends AppCompatActivity {
         initComponents();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_worker_list,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.add_worker){
+
+        }
+        return true;
+    }
+
     private void initFirebase() {
         mAuth = FirebaseAuth.getInstance(FirebaseApp.getInstance());
-        
+
         mWorkerDbRef = FirebaseDatabase.getInstance().getReference("calisanlar");
 
         ValueEventListener eventListener = new ValueEventListener() {
@@ -73,25 +93,17 @@ public class WorkersActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
+        mWorkerListToolbar = (Toolbar) findViewById(R.id.worker_list_toolbar);
+        setSupportActionBar(mWorkerListToolbar);
         mWorkerRecyclerView = (RecyclerView) findViewById(R.id.workers_recyler_view);
         mWorkerAdapter = new WorkerAdapter(workerList,this);
         mWorkerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mWorkerRecyclerView.setAdapter(mWorkerAdapter);
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1 && resultCode == RESULT_OK){
-            Worker worker = (Worker) data.getSerializableExtra("worker");
-            for (int i = 0; i<workerList.size(); i++){
-                if (workerList.get(i).telefon.equals(worker.telefon)){
-                    workerList.remove(i);
-
-                    break;
-                }
-            }
-        }
     }
 }
