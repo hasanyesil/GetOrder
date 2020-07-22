@@ -31,7 +31,7 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerHold
 
     public void setWorkers(ArrayList<Worker> workerList){
         this.workerList = workerList;
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     @NonNull
