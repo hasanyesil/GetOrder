@@ -31,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.greenrock.getorder.R;
 import com.greenrock.getorder.interfaces.ProductCountListener;
+import com.greenrock.getorder.model.Product;
 import com.greenrock.getorder.ui.adapter.OrderListAdapter;
 
 import java.text.SimpleDateFormat;
@@ -60,14 +61,14 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
 
 
     private HashMap<String, String> mCheckOrderList;   //
-    private HashMap<String,Float> mProductList;
+    private HashMap<String, Product> mProductList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check);
 
-        mProductList = (HashMap<String, Float>) getIntent().getSerializableExtra("product_list");
+        mProductList = (HashMap<String, Product>) getIntent().getSerializableExtra("product_list");
 
         mCheckOrderList = new HashMap<>();
         mOrderListAdapter = new OrderListAdapter(this,mProductList,true);
@@ -145,7 +146,7 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             mClosedCheckData.child(day).child(time).child("urunler").child(entry.getKey().toString()).child("adet fiyat")
-                                                    .setValue(mProductList.get(entry.getKey()));
+                                                    .setValue(mProductList.get(entry.getKey()).fiyat);
                                             mClosedCheckData.child(day).child(time).child("toplam fiyat").setValue(totalPrice);
                                         }
                                     });
@@ -192,7 +193,7 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
                 Log.d(TAG, "writeFirebase: Urun -> " + entry.getKey() + " Adet: " + entry.getValue());
             }
             mCheckData.child(entry.getKey()).child("adet").setValue(entry.getValue());
-            mCheckData.child(entry.getKey()).child("adet fiyat").setValue(mProductList.get(entry.getKey()));
+            mCheckData.child(entry.getKey()).child("adet fiyat").setValue(mProductList.get(entry.getKey()).fiyat);
             mCheckData.removeEventListener(orderCheckEventListener);
             mCheckData.addValueEventListener(orderCheckEventListener);
         }
@@ -211,7 +212,7 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
         totalPrice = 0;
         if (mTotalPriceTextview!=null){
             for (Map.Entry entry : mCheckOrderList.entrySet()){
-                totalPrice = totalPrice + (Integer.parseInt(entry.getValue().toString()) * mProductList.get(entry.getKey()));
+                totalPrice = totalPrice + (Integer.parseInt(entry.getValue().toString()) * mProductList.get(entry.getKey()).fiyat);
             }
             mTotalPriceTextview.setText(String.format("%s TL", totalPrice));
         }

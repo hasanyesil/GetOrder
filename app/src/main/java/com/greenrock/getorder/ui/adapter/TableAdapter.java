@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.greenrock.getorder.R;
+import com.greenrock.getorder.model.Product;
 import com.greenrock.getorder.ui.activity.CheckActivity;
 import com.greenrock.getorder.ui.activity.OrderActivity;
 
@@ -37,7 +38,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     private ArrayList<Bitmap> filledTableBg;
     private ArrayList<Canvas> emptyTableCanvas;
     private ArrayList<Canvas> filledTableCanvas;
-    private HashMap<String,Float> productList;
+    private HashMap<String,Product> productList;
     private boolean isCashier;
 
     public TableAdapter(Context context, boolean isCashier){
@@ -173,7 +174,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
         }
     }
 
-    public void setProductList(HashMap<String,Float> productList){
+    public void setProductList(HashMap<String, Product> productList){
         this.productList = productList;
     }
 

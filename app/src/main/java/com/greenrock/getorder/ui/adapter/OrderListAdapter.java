@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.greenrock.getorder.R;
 import com.greenrock.getorder.interfaces.ProductCountListener;
+import com.greenrock.getorder.model.Product;
 
 import java.util.HashMap;
 
@@ -20,11 +21,11 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
 
     //Name, count
     private HashMap<String,String> orderListMap;
-    private HashMap<String,Float> orderPriceMap;
+    private HashMap<String,Product> orderPriceMap;
     private ProductCountListener mProductCounterListener;
     private boolean isCashier;
 
-    public OrderListAdapter(ProductCountListener productCountListener, HashMap<String,Float> orderPriceMap, boolean isCashier){
+    public OrderListAdapter(ProductCountListener productCountListener, HashMap<String, Product> orderPriceMap, boolean isCashier){
         mProductCounterListener = productCountListener;
         orderListMap = new HashMap<>();
         this.orderPriceMap = orderPriceMap;
@@ -50,7 +51,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Cust
         holder.productNameTv.setText(key);
         holder.productCountTv.setText(String.format("X%s", count));
         if (isCashier)
-            holder.productPriceTv.setText(String.format("%s TL", orderPriceMap.get(key)));
+            holder.productPriceTv.setText(String.format("%s TL", orderPriceMap.get(key).fiyat));
         else
             holder.productPriceTv.setVisibility(View.GONE);
         holder.removeClickListeners();

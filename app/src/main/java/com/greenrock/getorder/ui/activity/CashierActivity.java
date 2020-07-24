@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.greenrock.getorder.R;
+import com.greenrock.getorder.model.Product;
 import com.greenrock.getorder.ui.adapter.TableAdapter;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class CashierActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    private HashMap<String,Float> mProductList;
+    private HashMap<String, Product> mProductList;
 
     private Toolbar mToolbar;
     private RecyclerView mTableRecyclerview;
@@ -126,7 +127,8 @@ public class CashierActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()){
                     for (DataSnapshot child2 : child.getChildren()){
-                        mProductList.put(child2.getKey(),Float.parseFloat(child2.getValue().toString()));
+                        Product product = child2.getValue(Product.class);
+                        mProductList.put(product.isim,product);
                     }
                 }
                 adapter.setProductList(mProductList);

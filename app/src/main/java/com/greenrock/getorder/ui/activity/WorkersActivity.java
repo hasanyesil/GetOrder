@@ -39,7 +39,6 @@ public class WorkersActivity extends AppCompatActivity {
 
     private DatabaseReference mWorkerDbRef;
     private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
 
     private ArrayList<Worker> workerList;
 

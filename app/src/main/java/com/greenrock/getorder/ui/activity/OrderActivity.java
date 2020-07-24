@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.greenrock.getorder.R;
 import com.greenrock.getorder.interfaces.ProductCountListener;
+import com.greenrock.getorder.model.Product;
 import com.greenrock.getorder.ui.adapter.OrderListAdapter;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
     private OrderListAdapter mOrderListAdapter;
 
     private HashMap<String, String> mCheckOrderList;   //Name, Count
-    private HashMap<String,Float> mProductList; //Name, Price
+    private HashMap<String, Product> mProductList; //Name, Price
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
 
         mCheckOrderList = new HashMap<>();
         mTableName = getIntent().getStringExtra("table_name");
-        mProductList = (HashMap<String, Float>) getIntent().getSerializableExtra("product_list");
+        mProductList = (HashMap<String, Product>) getIntent().getSerializableExtra("product_list");
         mOrderListAdapter = new OrderListAdapter(this,mProductList,false);
         Log.d(TAG, "onCreate: table name: " + mTableName);
         Log.d(TAG, "onCreate: product list: " + mProductList);
@@ -123,7 +124,7 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
                 Log.d(TAG, "writeFirebase: Urun -> " + entry.getKey() + " Adet: " + entry.getValue());
             }
             mCheckData.child(entry.getKey()).child("adet").setValue(entry.getValue());
-            mCheckData.child(entry.getKey()).child("adet fiyat").setValue(mProductList.get(entry.getKey()));
+            mCheckData.child(entry.getKey()).child("adet fiyat").setValue(mProductList.get(entry.getKey()).fiyat);
             mCheckData.removeEventListener(orderCheckEventListener);
             mCheckData.addValueEventListener(orderCheckEventListener);
         }

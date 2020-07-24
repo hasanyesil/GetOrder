@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 
 import com.greenrock.getorder.R;
+import com.greenrock.getorder.model.Product;
 import com.greenrock.getorder.ui.adapter.ProductsListAdapter;
 
 import java.util.HashMap;
@@ -30,7 +31,7 @@ public class SearchActivity extends AppCompatActivity{
     private androidx.appcompat.widget.Toolbar toolbar;
     private RecyclerView recyclerView;
     private SearchView searchView;
-    private HashMap<String,Float> products;
+    private HashMap<String, Product> products;
     private ProductsListAdapter mAdapter;
 
     @Override
@@ -38,7 +39,7 @@ public class SearchActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        products = (HashMap<String, Float>) getIntent().getSerializableExtra("products");
+        products = (HashMap<String, Product>) getIntent().getSerializableExtra("products");
         initializeViews();
 
     }
