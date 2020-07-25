@@ -13,7 +13,7 @@
         <activity android:name=".ui.activity.ProductDetailActivity" />
         <activity android:name=".ui.activity.AddWorkerActivity" />
         <activity android:name=".ui.activity.WorkerDetailsActivity" />
-        <activity android:name=".ui.activity.OldChecksAcitivity" />
+        <activity android:name=".ui.activity.OldChecksActivity" />
         <activity android:name=".ui.activity.ProductsActivity" />
         <activity android:name=".ui.activity.WorkersActivity" />
         <activity android:name=".ui.activity.CheckActivity" />
