@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +24,7 @@ import com.greenrock.getorder.model.Product;
 import com.greenrock.getorder.ui.adapter.AdminProductsListAdapter;
 import com.greenrock.getorder.ui.adapter.ProductsListAdapter;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 public class ProductsActivity extends AppCompatActivity {
@@ -50,6 +52,11 @@ public class ProductsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.add_product){
+            Intent intent = new Intent(ProductsActivity.this, AddProductActivity.class);
+            intent.putExtra("products", mProducts);
+            startActivity(intent);
+        }
         return true;
     }
 
