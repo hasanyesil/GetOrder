@@ -1,19 +1,30 @@
 package com.greenrock.getorder.ui.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.renderscript.Sampler;
 import android.text.InputType;
 import android.util.Patterns;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -57,6 +68,48 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         initFirebase();
         initComponents();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_product_detail,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.delete_product){
+            AlertDialog dialog;
+            AlertDialog.Builder builder = new AlertDialog.Builder(ProductDetailActivity.this);
+            TextView title = new TextView(ProductDetailActivity.this);
+            title.setTextColor(ContextCompat.getColor(ProductDetailActivity.this, R.color.colorPrimary));
+            title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+            title.setTypeface(Typeface.DEFAULT_BOLD);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(0, 20, 0, 0);
+            title.setPadding(0,30,0,0);
+            title.setLayoutParams(lp);
+            title.setText("ÜRÜN");
+            title.setGravity(Gravity.CENTER);
+
+            builder.setCustomTitle(title).setMessage("Ürün silinsin mi?");
+            builder.setPositiveButton("Evet", new Dialog.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    removeProduct();
+                    finish();
+                }
+            });
+
+            builder.setNegativeButton("İptal", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+            dialog = builder.create();
+            dialog.show();
+        }
+        return true;
     }
 
     private void initFirebase(){
@@ -179,6 +232,20 @@ public class ProductDetailActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(ProductDetailActivity.this, "Hata: Ürün güncellenemedi.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void removeProduct(){
+        mProductDbRef.child(mProduct.kategori).child(mProduct.isim).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(ProductDetailActivity.this, "Ürün silindi.", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ProductDetailActivity.this, "Hata: Ürün silinemedi.", Toast.LENGTH_SHORT).show();
             }
         });
     }
