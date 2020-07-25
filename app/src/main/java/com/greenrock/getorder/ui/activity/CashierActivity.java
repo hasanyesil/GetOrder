@@ -39,6 +39,10 @@ public class CashierActivity extends AppCompatActivity {
     private DatabaseReference mActiveCheckReferance;
     private DatabaseReference mProductListReference;
 
+    private ValueEventListener productListListener;
+    private ValueEventListener tableStatusListener;
+    private ValueEventListener tableCountListener;
+
     private FirebaseAuth mAuth;
 
     private HashMap<String, Product> mProductList;
@@ -73,6 +77,7 @@ public class CashierActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.logout_button:
                 mAuth.signOut();
+                mActiveCheckReferance.removeEventListener(tableStatusListener);
                 Intent intent = new Intent(CashierActivity.this,LoginActivity.class);
                 startActivity(intent);
                 finish();
@@ -87,12 +92,14 @@ public class CashierActivity extends AppCompatActivity {
         mActiveCheckReferance = FirebaseDatabase.getInstance().getReference("aktif fisler");
         mProductListReference = FirebaseDatabase.getInstance().getReference("urunler");
 
-        ValueEventListener eventListener1 = new ValueEventListener() {
+        tableCountListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d(TAG, "onDataChange: " + dataSnapshot.getValue(String.class));
                 mTableCount = Integer.parseInt(dataSnapshot.getValue(String.class));
                 Log.d(TAG, "onDataChange: " + mTableCount);
+
+                mActiveCheckReferance.addValueEventListener(tableStatusListener);
             }
 
             @Override
@@ -101,7 +108,7 @@ public class CashierActivity extends AppCompatActivity {
             }
         };
 
-        ValueEventListener eventListener2 = new ValueEventListener() {
+        tableStatusListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 tableStatus = new int[mTableCount];
@@ -122,7 +129,7 @@ public class CashierActivity extends AppCompatActivity {
             }
         };
 
-        ValueEventListener productListListener = new ValueEventListener() {
+        productListListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()){
@@ -141,8 +148,7 @@ public class CashierActivity extends AppCompatActivity {
         };
 
 
-        mDatabase.addListenerForSingleValueEvent(eventListener1);
-        mActiveCheckReferance.addValueEventListener(eventListener2);
+        mDatabase.addListenerForSingleValueEvent(tableCountListener);
         mProductListReference.addListenerForSingleValueEvent(productListListener);
     }
 
@@ -160,4 +166,9 @@ public class CashierActivity extends AppCompatActivity {
         Log.d(TAG, "initComponents: " + mTableCount);
     }
 
+    @Override
+    public void onBackPressed() {
+        mActiveCheckReferance.removeEventListener(tableStatusListener);
+        super.onBackPressed();
+    }
 }

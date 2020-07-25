@@ -7,6 +7,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.renderscript.Sampler;
+import android.text.InputType;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -83,6 +85,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void initComponents() {
         mProductNameEdt = (EditText) findViewById(R.id.product_name_edt);
         mProductPriceEdt = (EditText) findViewById(R.id.product_price_edt);
+        mProductPriceEdt.setInputType(InputType.TYPE_CLASS_NUMBER| InputType.TYPE_NUMBER_FLAG_DECIMAL);
         mToolbar = (Toolbar) findViewById(R.id.product_detail_toolbar);
 
         mProductNameEdt.setText(mProduct.isim);
@@ -123,7 +126,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 if (!isFieldsCorrect())
                     return;
 
-                Product newProduct = new Product(mProductNameEdt.getText().toString(),mProductCategory,Float.valueOf(mProductPriceEdt.getText().toString()));
+                Product newProduct = new Product(mProductNameEdt.getText().toString(),mProductCategory,Float.valueOf(mProductPriceEdt.getText().toString().trim()));
                 if (newProduct.isEquals(mProduct)){
                     finish();
                 }else{
