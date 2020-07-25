@@ -179,7 +179,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 if (!isFieldsCorrect())
                     return;
 
-                Product newProduct = new Product(mProductNameEdt.getText().toString(),mProductCategory,Float.valueOf(mProductPriceEdt.getText().toString().trim()));
+                Product newProduct = new Product(mProductNameEdt.getText().toString().toLowerCase(),mProductCategory,Float.valueOf(mProductPriceEdt.getText().toString().trim()));
                 if (newProduct.isEquals(mProduct)){
                     finish();
                 }else{

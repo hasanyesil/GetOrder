@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.greenrock.getorder.R;
 
 public class AdminActivity extends AppCompatActivity {
@@ -80,7 +79,7 @@ public class AdminActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case R.id.checks_cardview:
-                        intent = new Intent(AdminActivity.this, OldChecksAcitivity.class);
+                        intent = new Intent(AdminActivity.this, OldChecksActivity.class);
                         startActivity(intent);
                         break;
                 }

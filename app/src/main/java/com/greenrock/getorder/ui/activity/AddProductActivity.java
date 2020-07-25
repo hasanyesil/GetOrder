@@ -88,7 +88,7 @@ public class AddProductActivity extends AppCompatActivity {
                 if (!isFieldsCorrect())
                     return;
 
-                Product newProduct = new Product(mProductNameEdt.getText().toString(),mProductCategory,Float.valueOf(mProductPriceEdt.getText().toString().trim()));
+                Product newProduct = new Product(mProductNameEdt.getText().toString().toLowerCase(),mProductCategory,Float.valueOf(mProductPriceEdt.getText().toString().trim()));
                 for (Product product : mProducts.values()){
                     if (product.isim.equals(newProduct.isim)){
                         Toast.makeText(AddProductActivity.this, "Bu isimde başka bir ürün var", Toast.LENGTH_SHORT).show();
