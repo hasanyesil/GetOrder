@@ -69,7 +69,6 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
         setContentView(R.layout.activity_check);
 
         mProductList = (HashMap<String, Product>) getIntent().getSerializableExtra("product_list");
-
         mCheckOrderList = new HashMap<>();
         mOrderListAdapter = new OrderListAdapter(this,mProductList,true);
 
@@ -89,6 +88,9 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()){
                     mCheckOrderList.put(child.getKey(),child.child("adet").getValue().toString());
+                }
+                if (mCheckOrderList.size() == 0){
+                    mCheckButton.setVisibility(View.INVISIBLE);
                 }
                 mOrderListAdapter.setProductList(mCheckOrderList);
 
@@ -113,6 +115,7 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
         mOrderRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mCheckButton = (Button) findViewById(R.id.check_button);
         mTotalPriceTextview = (TextView) findViewById(R.id.total_price_textview);
+
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
