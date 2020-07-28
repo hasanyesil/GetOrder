@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/menu_waiter"
-        app:title="Cashier"
+        app:title="Kasa"
         app:titleMarginStart="30dp"
         app:titleTextColor="#FFFFFF" />
 
