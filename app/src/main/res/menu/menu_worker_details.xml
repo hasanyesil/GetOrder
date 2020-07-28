@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/delete_worker"
-        android:icon="@android:drawable/ic_delete"
+        android:icon="@drawable/ic_delete_white_18dp"
         app:showAsAction="always"
         android:title="Delete">
     </item>
