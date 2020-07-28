@@ -93,7 +93,7 @@ public class AddWorkerActivity extends AppCompatActivity {
                 }
 
                 worker.isim = worker.isim.substring(0,1).toUpperCase() + worker.isim.substring(1).toLowerCase();
-                worker.soyisim = worker.soyisim.substring(0,1).toUpperCase() + worker.isim.substring(1).toLowerCase();
+                worker.soyisim = worker.soyisim.substring(0,1).toUpperCase() + worker.soyisim.substring(1).toLowerCase();
                 worker.pozisyon = worker.pozisyon.toLowerCase();
 
 

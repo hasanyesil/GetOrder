@@ -136,6 +136,9 @@ public class LoginActivity extends AppCompatActivity {
             case "kasa":
                 loginIntent = new Intent(LoginActivity.this,CashierActivity.class);
                 break;
+            case "mutfak":
+                loginIntent = new Intent(LoginActivity.this,KitchenActivity.class);
+                break;
             default:
                 return;
         }

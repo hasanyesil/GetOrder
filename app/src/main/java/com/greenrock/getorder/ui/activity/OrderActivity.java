@@ -33,8 +33,10 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
     private String mTableName;
 
     private DatabaseReference mCheckData;
+    private DatabaseReference mOrderReference;
 
     ValueEventListener orderCheckEventListener;
+    ValueEventListener orderReadyEventListener;
 
     private Toolbar mToolbar;
     private Button mAddProductButton;
@@ -43,6 +45,7 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
 
     private HashMap<String, String> mCheckOrderList;   //Name, Count
     private HashMap<String, Product> mProductList; //Name, Price
+    private HashMap<String, Integer> mReadyOrderList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
         setContentView(R.layout.activity_order);
 
         mCheckOrderList = new HashMap<>();
+        mReadyOrderList = new HashMap<>();
         mTableName = getIntent().getStringExtra("table_name");
         mProductList = (HashMap<String, Product>) getIntent().getSerializableExtra("product_list");
         mOrderListAdapter = new OrderListAdapter(this,mProductList,false);
@@ -61,6 +65,21 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
 
     public void initFirebase()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {
         mCheckData = FirebaseDatabase.getInstance().getReference("aktif fisler/" + mTableName + "/urunler");
+        mOrderReference = FirebaseDatabase.getInstance().getReference("siparisler/" + mTableName);
+
+        orderReadyEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()){
+                    mReadyOrderList.put(child.getKey(),child.child("adet").getValue(Integer.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
 
         orderCheckEventListener = new ValueEventListener() {
             @Override
@@ -80,6 +99,7 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
         };
 
         mCheckData.addValueEventListener(orderCheckEventListener);
+        mOrderReference.addValueEventListener(orderReadyEventListener);
     }
 
     public void initComponents(){
@@ -118,6 +138,13 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
 
     public void writeFirebase(HashMap<String,Integer> productMap){
         for (Map.Entry<String,Integer> entry : productMap.entrySet()){
+            if (mReadyOrderList.containsKey(entry.getKey())){
+                int count = mReadyOrderList.get(entry.getKey());
+                mOrderReference.child(entry.getKey()).child("adet").setValue(count + entry.getValue());
+            }else{
+                mOrderReference.child(entry.getKey()).child("adet").setValue(entry.getValue());
+            }
+
             if (mCheckOrderList.containsKey(entry.getKey())){
                 int count = Integer.parseInt(mCheckOrderList.get(entry.getKey()));
                 entry.setValue(entry.getValue() + count);
@@ -125,17 +152,24 @@ public class OrderActivity extends AppCompatActivity implements ProductCountList
             }
             mCheckData.child(entry.getKey()).child("adet").setValue(entry.getValue());
             mCheckData.child(entry.getKey()).child("adet fiyat").setValue(mProductList.get(entry.getKey()).fiyat);
-            mCheckData.removeEventListener(orderCheckEventListener);
-            mCheckData.addValueEventListener(orderCheckEventListener);
         }
+        mCheckData.removeEventListener(orderCheckEventListener);
+        mCheckData.addValueEventListener(orderCheckEventListener);
+        mOrderReference.removeEventListener(orderReadyEventListener);
+        mOrderReference.addValueEventListener(orderReadyEventListener);
     }
 
     @Override
     public void onCountChange(String key, int count) {
         if (count == 0){
             mCheckData.child(key).removeValue();
+            mOrderReference.child(key).removeValue();
         }else{
             mCheckData.child(key).child("adet").setValue(count);
+            if (mReadyOrderList.containsKey(key)){
+                mOrderReference.child(key).child("adet").setValue(mReadyOrderList.get(key) + 1);
+            }else
+                mOrderReference.child(key).child("adet").setValue(1);
         }
     }
 }

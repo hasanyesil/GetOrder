@@ -24,7 +24,6 @@ import com.greenrock.getorder.R;
 import com.greenrock.getorder.model.Product;
 import com.greenrock.getorder.ui.adapter.TableAdapter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 

@@ -119,7 +119,7 @@ public class WorkersActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     Toast.makeText(WorkersActivity.this, "ÇALIŞAN OLUŞTURULDU.", Toast.LENGTH_SHORT).show();
-                    if (newWorker.pozisyon.equals("garson") || newWorker.pozisyon.equals("admin") || newWorker.pozisyon.equals("kasa"))
+                    if (newWorker.pozisyon.equals("garson") || newWorker.pozisyon.equals("admin") || newWorker.pozisyon.equals("kasa") || newWorker.pozisyon.equals("mutfak"))
                         mAuth.createUserWithEmailAndPassword(newWorker.email,newWorker.sifre).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
