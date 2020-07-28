@@ -148,6 +148,8 @@ public class CheckActivity extends AppCompatActivity implements ProductCountList
                                             mClosedCheckData.child(day).child(time).child("urunler").child(entry.getKey().toString()).child("adet fiyat")
                                                     .setValue(mProductList.get(entry.getKey()).fiyat);
                                             mClosedCheckData.child(day).child(time).child("toplam fiyat").setValue(totalPrice);
+                                            mClosedCheckData.child(day).child(time).child("tarih").setValue(day);
+                                            mClosedCheckData.child(day).child(time).child("saat").setValue(time);
                                         }
                                     });
                             mCheckNode.removeValue();
