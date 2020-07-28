@@ -165,4 +165,15 @@
         app:layout_constraintEnd_toEndOf="@+id/new_worker_name_edt"
         app:layout_constraintTop_toTopOf="@+id/textView9" />
 
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:text='** Pozisyonu "kasa", "mutfak", "admin", "garson" olan kullanıcılar sisteme giriş yapabilir. '
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textView8"
+        app:layout_constraintTop_toBottomOf="@+id/new_worker_save_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
