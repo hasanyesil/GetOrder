@@ -48,10 +48,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.loading_screen);
 
         initFirebase();
-        initComponents();
     }
 
     public void initComponents(){
@@ -79,8 +78,11 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d(TAG, "onDataChange: Selamlar");
                     if (child.child("email").getValue(String.class).equals(mUser.getEmail())){
                         passLoginScreen(child.child("pozisyon").getValue(String.class));
+                        return;
                     }
                 }
+                setContentView(R.layout.activity_main);
+                initComponents();
             }
 
             @Override
@@ -98,6 +100,9 @@ public class LoginActivity extends AppCompatActivity {
                     // If user logged in
                     Log.d(TAG, "onAuthStateChanged: hiii");
                     mDatabase.addValueEventListener(valueEventListener);
+                }else{
+                    setContentView(R.layout.activity_main);
+                    initComponents();
                 }
             }
         };
