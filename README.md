@@ -11,4 +11,5 @@ Uygulamanın çalışması için https://console.firebase.google.com adresine gi
 
 ## TASK LIST
 - [x] Readme
+- [ ] MVVM Pattern
 - [ ] Unit Tests
